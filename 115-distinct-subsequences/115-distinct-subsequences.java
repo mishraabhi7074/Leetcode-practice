@@ -4,7 +4,7 @@ class Solution {
         int[][] dp = new int[n + 1][m + 1];
         for (int[] d : dp)
             Arrays.fill(d, -1);
-        return numDistinct_memo(s, t, n, m, dp);
+        return numDistinct_tabu(s, t, n, m, dp);
     }
 
     
@@ -24,5 +24,22 @@ class Solution {
             return dp[n][m] = a + b;
         else
             return dp[n][m] = b;
+    }
+    
+     public int numDistinct_tabu(String s, String t, int N, int M, int[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (m == 0 || n == 0) {
+                    dp[n][m] = m == 0 ? 1 : 0;
+                    continue;
+                }
+
+                if (s.charAt(n - 1) == t.charAt(m - 1))
+                    dp[n][m] = dp[n - 1][m - 1] + dp[n - 1][m];
+                else
+                    dp[n][m] = dp[n - 1][m];
+            }
+        }
+        return dp[N][M];
     }
 }
