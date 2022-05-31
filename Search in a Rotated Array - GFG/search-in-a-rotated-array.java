@@ -34,7 +34,7 @@ class Solution
     int search(int arr[], int l, int h, int key){
     //complete the function here
         while(l<=h){
-            int mid=l+(h-l)/2;
+            int mid=(l + h)/2;
             
             if(arr[mid]==key)
                 return mid;
