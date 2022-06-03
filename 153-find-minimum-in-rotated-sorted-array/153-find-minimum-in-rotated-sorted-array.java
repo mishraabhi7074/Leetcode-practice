@@ -1,12 +1,26 @@
 class Solution {
     public int findMin(int[] nums) {
-        int l = nums.length;
-        int min = Integer.MAX_VALUE;
-        for(int i =0; i < l; i++){
-           if(nums[i] < min){
-               min = nums[i];
-           }   
+        int lo = 0;
+        int hi = nums.length -1;
+        
+        // if array is not rotated
+        if(nums[lo] <= nums[hi]){
+            return nums[0];
         }
-        return min;
+        
+        while(lo <= hi){
+            int mid = (lo + hi)/2;
+            
+            if(nums[mid] > nums[mid +1]){
+                return nums[mid + 1];
+            }else if(nums[mid] < nums[mid -1]){
+                return nums[mid];
+            }else if(nums[lo] <= nums[mid]){
+                lo = mid + 1;
+            }else if(nums[mid] <= nums[hi]){
+                hi = mid -1;
+            }
+        }
+        return -1;
     }
 }
