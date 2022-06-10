@@ -3,6 +3,7 @@ class Solution {
         int ans =0;
         int i = -1;
         int j = -1;
+        
         HashMap<Character, Integer> map = new HashMap<>();
         while(true){
             boolean f1 = false;
