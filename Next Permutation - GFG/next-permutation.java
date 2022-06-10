@@ -31,36 +31,56 @@ class GFG{
 // User function Template for Java
 
 class Solution{
-   static List<Integer> nextPermutation(int N, int arr[]) {
-        int k = 0, l = 0;
-        boolean perExists = false;
-        List<Integer> ll = new ArrayList<>(N);
-        int i = 0;
-        for (; i < arr.length - 1; i++) {
-            ll.add(arr[i]);
-            if (arr[i] < arr[i + 1]) {
-                perExists = true;
-                if (i > k) {
-                    k = i;
+    static List<Integer> nextPermutation(int N, int arr[]){
+        // code here
+        int i =0;
+        for(i = N-2; i >= 0; i--){
+            if(arr[i] < arr[i+1]){
+                break;
+            }
+        }
+        if(i >= 0){
+            for(int j = N -1; j >=i; j--){
+                if(arr[j] >arr[i]){
+                    swap(arr, i, j);
+                    break;
                 }
             }
-            if (k < i && arr[k] < arr[i]) {
-                l = i;
-            }
         }
-        ll.add(arr[i]);
-        if (k < i && arr[k] < arr[i]) {
-            l = i;
+        
+        reverse(arr, i+1, N-1);
+        
+        List<Integer> list = new ArrayList<>();
+        for(int x : arr){
+            list.add(x);
+            
         }
-        if (!perExists) {
-            Collections.reverse(ll);
-        } else {
-            Collections.swap(ll, k, l);
-            int j = N - 1;
-            for (i = k + 1; i < (N + k + 1) / 2; i++, j--) {
-                Collections.swap(ll, i, j);
-            }
+        return list;
+        
+    }
+    
+    static void swap(int[] arr, int i, int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    
+    static void reverse(int [] arr, int s, int e){
+        while(s <= e){
+            swap(arr ,s++, e-- );
         }
-        return ll;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
