@@ -1,17 +1,15 @@
+//do it again
 class Solution {
     public int[] twoSum(int[] nums, int target) {
-         int max = nums.length; 
-    for(int i = 0;i<max;i++)
-    {
-        int diff = target - nums[i];
-        for(int j=i+1;j<max;j++)
-        {
-            if(nums[j] == diff)
-            {
-                return new int[]{i,j};
+        for(int i = 0;i < nums.length - 1;i++){
+            target -= nums[i];
+            for(int j = i + 1;j < nums.length;j++){
+                if(target == nums[j]){
+                    return new int[]{i, j};
+                }
             }
+            target += nums[i];
         }
-    }
-    return new int[]{0,0};   
+        return new int[]{-1, -1};
     }
 }
