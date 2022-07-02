@@ -1,43 +1,48 @@
+// do it again
 class Solution {
     public List<Integer> findAnagrams(String s, String p) {
-		
-	List<Integer> indexes = new ArrayList<>();
-	if(s.isEmpty() || p.length()>s.length()) return indexes;
-	Map<Character,Integer> pHash = new HashMap<>();
-	for(char c: p.toCharArray()) {
-		if(pHash.containsKey(c)) {
-			pHash.put(c, pHash.get(c)+1);
-		} else {
-			pHash.put(c, 1);
-		}
-	}
-	
-	int numberOfCharsToBeZero = pHash.keySet().size();
-	
-	for(int i=0;i<p.length();i++) {
-		char c = s.charAt(i);
-		if(pHash.containsKey(c)) {
-			int value = pHash.get(c)-1;
-			pHash.put(c, value);
-			if(value==0) numberOfCharsToBeZero--;
-		}
-	}
-	if(numberOfCharsToBeZero==0) indexes.add(0);
-	int start=0;
-	int end=p.length()-1;
-	while(end<s.length()-1) {
-		char startChar = s.charAt(start++);
-		char endChar = s.charAt(++end);
-		if(pHash.containsKey(startChar)) {
-			if(pHash.get(startChar)==0) numberOfCharsToBeZero++;
-			pHash.put(startChar, pHash.get(startChar)+1);
-		}
-		if(pHash.containsKey(endChar)) {
-			pHash.put(endChar, pHash.get(endChar)-1);
-			if(pHash.get(endChar)==0) numberOfCharsToBeZero--;
-		}
-		if(numberOfCharsToBeZero==0) indexes.add(start);
-	}
-	return indexes;
-}
+        if(s == null || s.length() < p.length() || s.length() == 0) {
+            return new ArrayList<>();
+        }
+        
+        HashMap<Character,Integer> needs = new HashMap<Character,Integer>();
+        HashMap<Character,Integer> window = new HashMap<Character,Integer>();
+        for (char c : p.toCharArray()) needs.put(c, needs.getOrDefault(c,0) + 1);
+        
+        int left = 0, right = 0;
+        // counts elements in the window that meet the needs
+        int valid = 0;
+        List<Integer> result = new ArrayList<>();
+        
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            right++;
+            // update the window
+            if (needs.containsKey(c)) {
+                window.put(c, window.getOrDefault(c,0) + 1);
+                if (window.get(c).equals(needs.get(c))) {
+                    valid++;
+                }
+            }
+            // System.out.println(window);
+            // determine if left window needs to shrink
+            while (right - left >= p.length()) {
+                if (valid == needs.size()) {
+                    result.add(left);
+                }
+                // System.out.println();
+                char d = s.charAt(left);
+                left++;
+                // update the window
+                if (needs.containsKey(d)) {
+                    if (window.get(d).equals(needs.get(d))) {
+                        valid--;
+                    }
+                    window.put(d, window.get(d) - 1);
+                }
+            }
+        }
+        // end of sliding window
+        return result;
+    }
 }
