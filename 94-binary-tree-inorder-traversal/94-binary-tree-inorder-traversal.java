@@ -15,19 +15,33 @@
  */
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
-        if(root == null){
-            return new ArrayList<>();
+        //by morris traversal
+        ArrayList<Integer> retval = new ArrayList<>();
+        
+        TreeNode curr = root;
+        while(curr != null){
+            if(curr.left == null){
+                //add the node to the arraylist
+                //move to the right child
+                retval.add(curr.val);
+                curr = curr.right;
+            }else{
+                
+                TreeNode iop = curr.left; // iop -> in order predessor
+                while(iop.right != null && iop.right != curr){
+                    iop = iop.right;
+                }
+                
+                if(iop.right == null){
+                    iop.right = curr;
+                    curr = curr.left;
+                }else{
+                    iop.right = null;
+                    retval.add(curr.val);
+                    curr = curr.right;
+                }
+            }
         }
-        List<Integer> ans = new ArrayList<>();
-        List<Integer> l1 = inorderTraversal(root.left);
-        
-        ans.addAll(l1);
-        ans.add(root.val);
-        
-        List<Integer> l2 = inorderTraversal(root.right);
-
-        ans.addAll(l2);
-        
-        return ans;
+        return retval;
     }
 }
