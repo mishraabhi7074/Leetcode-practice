@@ -15,28 +15,54 @@
  */
 class Solution {
     public void recoverTree(TreeNode root) {
-		List<Integer> values = new ArrayList<Integer>();
-		helper(root, values);
-		values.sort(Comparator.naturalOrder());
-		swap(root, values);
-	}
-
-	private void swap(TreeNode root, List<Integer> values) {
-		if (root == null)
-			return;
-
-		swap(root.left, values);
-		root.val = values.get(0);
-		values.remove(0);
-		swap(root.right, values);
-	}
-
-	private void helper(TreeNode root, List<Integer> values) {
-		if (root == null)
-			return;
-
-		helper(root.left, values);
-		values.add(root.val);
-		helper(root.right, values);
-	}
+        
+        TreeNode curr = root;
+        TreeNode prev = null;
+        TreeNode n1 = null;
+        TreeNode n2 = null;
+        
+         while(curr != null){
+             if(curr.left == null){
+                  if(prev != null){
+                         if(curr.val < prev.val){
+                             if(n1 == null){
+                                 n1 = prev;
+                                 n2 = curr;
+                             }else{
+                                 n2 = curr;
+                             }
+                         }
+                     }
+                     prev = curr; 
+                     curr = curr.right;
+             }else{
+                 TreeNode iop = curr.left;
+                 while(iop.right != null && iop.right != curr){
+                     iop = iop.right;
+                 }
+                 if(iop.right == null){  //if left is not processed
+                     iop.right = curr;   // making thread
+                     curr = curr.left;
+                     
+                 }else{
+                     if(prev != null){
+                         if(curr.val < prev.val){
+                             if(n1 == null){
+                                 n1 = prev;
+                                 n2 = curr;
+                             }else{
+                                 n2 = curr;
+                             }
+                         }
+                     }
+                     prev = curr;
+                     iop.right = null; // if left is processed
+                     curr = curr.right;
+                 }
+             }
+         }
+         int temp = n1.val;
+         n1.val = n2.val;
+         n2.val = temp;
+    }
 }
