@@ -15,19 +15,33 @@
  */
 class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
-        if(root == null){
-            return new ArrayList<>();
-        }      
+        // by morris traversal
+         List<Integer> retVal = new ArrayList<>();
         
-        List<Integer> ans = new ArrayList<>();
+        TreeNode curr = root;
         
-        ans.add(root.val);
-        List<Integer> l1 = preorderTraversal(root.left);
-        List<Integer> l2 =preorderTraversal(root.right);
-         
-        ans.addAll(l1);
-        ans.addAll(l2);
+        while(curr != null){
+            if(curr.left == null){
+                retVal.add(curr.val);
+                curr = curr.right;
+            } else {
+                TreeNode iop = curr.left;
+                while(iop.right != null && iop.right != curr){
+                    iop = iop.right;
+                }
+                
+                if(iop.right == null){
+                    retVal.add(curr.val);
+
+                    iop.right = curr; // making the thread
+                    curr = curr.left;
+                } else {
+                    iop.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
         
-        return ans;
+        return retVal;
     }
 }
