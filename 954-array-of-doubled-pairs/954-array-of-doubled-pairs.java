@@ -1,35 +1,38 @@
 class Solution {
     public boolean canReorderDoubled(int[] arr) {
-        if(arr.length == 0){
-            return true;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int val:arr){
+            map.put(val, map.getOrDefault(val , 0) + 1);
         }
         
-        HashMap<Integer, Integer> freqmap = new HashMap<>();
+        Arrays.sort(arr);
         
-        for(int ele:arr){
-            freqmap.put(ele, freqmap.getOrDefault(ele, 0) + 1);
-        }
-        
-        Integer []ar = new Integer[arr.length];
-        
-        for(int i =0; i < arr.length; i++){
-            ar[i] = arr[i];
-        }
-        
-        Arrays.sort(ar, (a, b)->{
-            return Math.abs(a) - Math.abs(b);
-        });
-        
-        for(Integer ele: ar){
-            if(freqmap.get(ele) == 0){
+        for(int val : arr){
+            if(val == 0){
                 continue;
             }
-            if(freqmap.getOrDefault(2*ele, 0) == 0){
-                return false;
+            
+            if(map.containsKey(val) && map.containsKey(2*val)){
+                if(map.getOrDefault(val, 0) > 1){
+                    map.put(val, map.getOrDefault(val, 0) - 1);
+                }else{
+                    map.remove(val);
+                }
+                
+                if(map.getOrDefault(2*val, 0) > 1){
+                    map.put(2*val, map.getOrDefault(2*val, 0) -1);
+                }else{
+                    map.remove(2*val);
+                }
             }
-            freqmap.put(ele, freqmap.get(ele) -1);
-            freqmap.put(2*ele, freqmap.get(2*ele) -1);
         }
-        return true;
+        
+        if(map.size() == 0){
+            return true;
+        }else if(map.size() == 1 && map.containsKey(0)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
