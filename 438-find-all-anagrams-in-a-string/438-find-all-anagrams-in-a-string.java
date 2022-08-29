@@ -1,48 +1,37 @@
-// do it again
 class Solution {
+    //do the dry run again
     public List<Integer> findAnagrams(String s, String p) {
-        if(s == null || s.length() < p.length() || s.length() == 0) {
-            return new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
+        
+        // Basic check to see if the array is empty or not
+        if(s.length() == 0 || s == null) return output;
+        
+        // This array will store the count of each and every alphabet
+        // The size will be 26 as there are only 26 letters in alphabets
+        int[] charCount = new int[26];
+        
+        for(char c : p.toCharArray()){
+            // basically incrementing the assigned index for each alphabet 
+            charCount[c - 'a']++;
+        }
+// After this loop we will have our frequencies of each alphabet in the charCount array
+        
+        int left = 0;
+        int right = 0;
+        int count = p.length();
+        
+        while(right < s.length()){
+// this checks if the value present at the right index is atleast 1 as that would mean that the current alphabet is there in the p string , we all decrement the count of the alphabet after we found it and move the right pointer 1 step forward
+            
+            if(charCount[s.charAt(right++) - 'a']-- >= 1) count--;
+            
+            // if our count reaches 0 that means we fount the Anagram that we need and we just add the starting index of the anagram
+            if(count == 0) output.add(left);
+            
+            // if we found the whole anagram and charcount at the left index is still greater than or equal to 0, then we move the left pointer forward and we increment the charcount back so it does not affect the approach in the next step
+            if(right - left == p.length() && charCount[s.charAt(left++) - 'a']++ >= 0) count ++;
         }
         
-        HashMap<Character,Integer> needs = new HashMap<Character,Integer>();
-        HashMap<Character,Integer> window = new HashMap<Character,Integer>();
-        for (char c : p.toCharArray()) needs.put(c, needs.getOrDefault(c,0) + 1);
-        
-        int left = 0, right = 0;
-        // counts elements in the window that meet the needs
-        int valid = 0;
-        List<Integer> result = new ArrayList<>();
-        
-        while (right < s.length()) {
-            char c = s.charAt(right);
-            right++;
-            // update the window
-            if (needs.containsKey(c)) {
-                window.put(c, window.getOrDefault(c,0) + 1);
-                if (window.get(c).equals(needs.get(c))) {
-                    valid++;
-                }
-            }
-            // System.out.println(window);
-            // determine if left window needs to shrink
-            while (right - left >= p.length()) {
-                if (valid == needs.size()) {
-                    result.add(left);
-                }
-                // System.out.println();
-                char d = s.charAt(left);
-                left++;
-                // update the window
-                if (needs.containsKey(d)) {
-                    if (window.get(d).equals(needs.get(d))) {
-                        valid--;
-                    }
-                    window.put(d, window.get(d) - 1);
-                }
-            }
-        }
-        // end of sliding window
-        return result;
+        return output;
     }
 }
