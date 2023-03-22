@@ -31,69 +31,63 @@ class GFG {
 }
 // } Driver Code Ends
 
-
+class Node {
+    int first;
+    int second;
+    public Node(int first, int second) {
+        this.first = first;
+        this.second = second; 
+    }
+}
 class Solution {
-    // Function to detect cycle in an undirected graph.
-    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
-        // Code here
+    static boolean checkForCycle(ArrayList<ArrayList<Integer>> adj, int s,
+            boolean vis[], int parent[])
+    {
+       Queue<Node> q =  new LinkedList<>(); //BFS
+       q.add(new Node(s, -1));
+       vis[s] =true;
+       
+       // until the queue is empty
+       while(!q.isEmpty())
+       {
+           // source node and its parent node
+           int node = q.peek().first;
+           int par = q.peek().second;
+           q.remove(); 
+           
+           // go to all the adjacent nodes
+           for(Integer it: adj.get(node))
+           {
+               if(vis[it]==false)  
+               {
+                   q.add(new Node(it, node));
+                   vis[it] = true; 
+               }
         
-        boolean [] visited=new boolean[V+1];
+                // if adjacent node is visited and is not its own parent node
+               else if(par != it) return true;
+           }
+       }
+       
+       return false;
+    }
+    
+    // function to detect cycle in an undirected graph
+    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj)
+    {
+        boolean vis[] = new boolean[V];
+        Arrays.fill(vis,false);
+        int parent[] = new int[V];
+        Arrays.fill(parent,-1);  
+        
         for(int i=0;i<V;i++)
-        {
-            if(visited[i]==false)
-            {
-                if(bfs(i,adj,visited))
-                   return true;
-                
-            }
-        }
-        
-        return false;
-        
-    }
+            if(vis[i]==false) 
+                if(checkForCycle(adj, i,vis, parent)) 
+                    return true;
     
-    public boolean bfs(int i,ArrayList<ArrayList<Integer>> adj,boolean [] visited)
-    {
-        visited[i]=true;
-        Queue<Pair> pq=new ArrayDeque<>();
-        pq.add(new Pair(i,-1));
-        
-        while(pq.size()>0)
-        {
-            int counter=pq.size();
-            
-            Pair temp=pq.remove();
-            int src=temp.node;
-            int par=temp.parent;
-            
-            for(int it:adj.get(src))
-            {
-                if(visited[it]==false)
-                {
-                    pq.add(new Pair(it,src));
-                    visited[it]=true;
-                }
-                
-                else
-                {
-                    if(par!=it)
-                     return true;
-                }
-            }
-        }
-        
         return false;
     }
     
-    class Pair
-    {
-        int node;
-        int parent;
-        
-        Pair(int node,int parent)
-        {
-            this.node=node;
-            this.parent=parent;
-        }
-    }
+    
+   
 }
